@@ -27,7 +27,7 @@ public:
 
 	LogData() = delete;
 
-	LogData(string& _log)
+	LogData(const string& _log)
 		: time_(time(0))
 		, msg_(_log)
 	{}
@@ -42,7 +42,7 @@ public:
 class InfLog final :public LogData
 {
 public:
-	InfLog(string& _log)
+	InfLog(const string& _log)
 		: LogData(_log)
 	{}
 
@@ -61,7 +61,7 @@ public:
 class ErrLog final :public LogData
 {
 public:
-	ErrLog(string& _log)
+	ErrLog(const string& _log)
 		:LogData(_log)
 	{}
 

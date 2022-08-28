@@ -48,11 +48,11 @@ public:
 		call_once(CallFlag_, [this] { this->TerminateAll(); });
 	}
 
-	void AddTask(const function<void()>& task)
+	void AddTask(const function<void()>& _task)
 	{
 		if (!IsStop_)
 		{
-			TaskQueue_.Push(task);
+			TaskQueue_.Push(_task);
 			ThreadCondition_.notify_one();
 		}
 	}

@@ -164,7 +164,7 @@ public:
 
 		std::deque<uint8_t> temp;
 		temp.resize(sizeof(T));
-		std::copy_backward(add, add+sizeof(T), temp.end());
+		std::copy(add, add+sizeof(T), temp.end());
 
 		return std::search(deque_.begin(), deque_.end(), temp.begin(), temp.end());
 	}
@@ -173,7 +173,7 @@ public:
 	{
 		std::deque<uint8_t> temp;
 		temp.resize(_len);
-		std::copy_backward(_buf, _buf+_len, temp.end());
+		std::copy(_buf, _buf+_len, temp.end());
 
 		return std::search(deque_.begin(), deque_.end(), temp.begin(), temp.end());
 	}
@@ -185,7 +185,7 @@ public:
 		for (auto it : _vector)
 		{
 			temp.resize(temp.size() + it.length());
-			std::copy_backward(it.begin(), it.end(), temp.end());
+			std::copy(it.begin(), it.end(), temp.end());
 		}
 
 		return std::search(deque_.begin(), deque_.end(), temp.begin(), temp.end());
@@ -201,7 +201,7 @@ public:
 			uint8_t* add = (uint8_t*)(&it);
 
 			temp.resize(temp.size() + sizeof(T));
-			std::copy_backward(add, add+sizeof(T), temp.end());
+			std::copy(add, add+sizeof(T), temp.end());
 		}
 
 		return std::search(deque_.begin(), deque_.end(), temp.begin(), temp.end());
@@ -211,7 +211,7 @@ public:
 	{
 		std::deque<uint8_t> temp;
 		temp.resize(_str.length());
-		std::copy_backward(_str.begin(), _str.end(), temp.end());
+		std::copy(_str.begin(), _str.end(), temp.end());
 
 		return std::search(deque_.begin(), deque_.end(), temp.begin(), temp.end());
 	}
@@ -232,12 +232,12 @@ public:
 
 		if (_len >= static_cast<int>(dSize))
 		{
-			std::copy_backward(deque_.begin(), deque_.end(), _buf);
+			std::copy(deque_.begin(), deque_.end(), _buf);
 			deque_.erase(deque_.begin(), deque_.end());
 		}
 		else
 		{
-			std::copy_backward(deque_.begin(), deque_.begin() + _len, _buf);
+			std::copy(deque_.begin(), deque_.begin() + _len, _buf);
 			deque_.erase(deque_.begin(), deque_.begin() + _len);
 
 			dSize = _len;
