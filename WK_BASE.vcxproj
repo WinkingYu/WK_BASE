@@ -76,7 +76,9 @@
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
     <ClInclude Include="Log.h" />
-    <ClInclude Include="STL.h" />
+    <ClInclude Include="Pipeline.h" />
+    <ClInclude Include="Queue.h" />
+    <ClInclude Include="Singleton.h" />
     <ClInclude Include="ThreadPool.h" />
   </ItemGroup>
   <ItemDefinitionGroup />

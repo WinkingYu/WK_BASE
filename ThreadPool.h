@@ -11,7 +11,9 @@
 #include <atomic>
 #include <type_traits>
 
-#include "STL.h"
+
+#include "Queue.h"
+
 
 class ThreadPool
 {
@@ -39,16 +41,16 @@ public:
 
 		for (size_t i = 0; i < ThreadCount_; ++i)
 		{
-			shared_ptr<thread> t = make_shared<thread>(bind(&ThreadPool::Run, this, i));
+			std::shared_ptr<std::thread> t = std::make_shared<std::thread>(std::bind(&ThreadPool::Run, this, i));
 			ThreadVec_.emplace_back(t);
 		}
 	}
 	void Terminate()
 	{
-		call_once(CallFlag_, [this] { this->TerminateAll(); });
+		std::call_once(CallFlag_, [this] { this->TerminateAll(); });
 	}
 
-	void AddTask(const function<void()>& _task)
+	void AddTask(const std::function<void()>& _task)
 	{
 		if (!IsStop_)
 		{
@@ -72,15 +74,15 @@ private:
 
 			if (TaskQueue_.IsEmpty())
 			{
-				unique_lock<mutex> locker(ThreadMutex_);
-				if (ThreadCondition_.wait_for(locker, chrono::seconds(60)) == cv_status::timeout)
+				std::unique_lock<std::mutex> locker(ThreadMutex_);
+				if (ThreadCondition_.wait_for(locker, std::chrono::seconds(60)) == std::cv_status::timeout)
 					continue;
 			}
 
 			if (IsStop_)
 				break;
 
-			function<void()> task(nullptr);
+			std::function<void()> task(nullptr);
 			if (TaskQueue_.Pop(task) && task != nullptr)
 				task();
 		}
@@ -104,17 +106,17 @@ private:
 	}
 
 private:
-	atomic<bool> IsStop_;
-	atomic<bool> IsTerminated_;
+	std::atomic<bool> IsStop_;
+	std::atomic<bool> IsTerminated_;
 
 	size_t ThreadCount_;
 
-	std::vector<shared_ptr<std::thread>>	ThreadVec_;
+	std::vector<std::shared_ptr<std::thread>>	ThreadVec_;
 	std::mutex								ThreadMutex_;
 	std::condition_variable					ThreadCondition_;
 
-	Queue<function<void()>> TaskQueue_;
+	Queue<std::function<void()>> TaskQueue_;
 
-	once_flag   CallFlag_;
+	std::once_flag   CallFlag_;
 };
 

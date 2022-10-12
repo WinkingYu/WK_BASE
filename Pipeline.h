@@ -9,68 +9,6 @@
 #include <algorithm>
 #include <iostream>
 
-template <class T>
-class Queue
-{
-public:
-	Queue(Queue const&) = delete;
-	Queue(Queue&&) = delete;
-	Queue& operator=(Queue const&) = delete;
-	Queue& operator=(Queue&&) = delete;
-
-	Queue()
-		: queue_(), mutex_()
-	{}
-
-	virtual ~Queue()
-	{
-		while (!queue_.empty())
-			queue_.pop();
-	}
-
-	void Push(T _record)
-	{
-		std::lock_guard<std::mutex> lock(mutex_);
-		queue_.emplace(std::move(_record));
-	}
-
-	bool Pop(T& _record)
-	{
-		std::lock_guard<std::mutex> lock(mutex_);
-
-		if (queue_.empty())
-			return false;
-
-		_record = std::move(queue_.front());
-		queue_.pop();
-
-		return true;
-	}
-
-	size_t Size()
-	{
-		std::lock_guard<std::mutex> lock(mutex_);
-		return queue_.size();
-	}
-
-	bool IsEmpty()
-	{
-		std::lock_guard<std::mutex> lock(mutex_);
-		return queue_.empty();
-	}
-
-	void Clear()
-	{
-		std::lock_guard<std::mutex> lock(mutex_);
-		while (!queue_.empty())
-			queue_.pop();
-	}
-
-private:
-	std::queue<T> queue_;
-	std::mutex mutex_;
-};
-
 class Pipeline
 {
 public:
@@ -102,7 +40,7 @@ public:
 
 		std::lock_guard<std::mutex> lock(mutex_);
 		deque_.resize(deque_.size() + sizeof(T));
-		std::copy_backward(add, add+sizeof(T), deque_.end());
+		std::copy_backward(add, add + sizeof(T), deque_.end());
 
 		return sizeof(T);
 	}
@@ -123,12 +61,12 @@ public:
 		size_t pushCount{ 0 };
 
 		std::lock_guard<std::mutex> lock(mutex_);
-		for (auto it: _vector)
+		for (auto it : _vector)
 		{
 			uint8_t* add = (uint8_t*)(&it);
 
 			deque_.resize(deque_.size() + sizeof(T));
-			std::copy_backward(add, add+sizeof(T), deque_.end());
+			std::copy_backward(add, add + sizeof(T), deque_.end());
 
 			pushCount += sizeof(T);
 		}
@@ -151,7 +89,7 @@ public:
 	size_t Push(const std::vector<std::string>& _vector)
 	{
 		size_t pushCount{ 0 };
-		for (auto it: _vector)
+		for (auto it : _vector)
 			pushCount += Push(it);
 
 		return pushCount;
@@ -164,7 +102,7 @@ public:
 
 		std::deque<uint8_t> temp;
 		temp.resize(sizeof(T));
-		std::copy(add, add+sizeof(T), temp.end());
+		std::copy(add, add + sizeof(T), temp.end());
 
 		return std::search(deque_.begin(), deque_.end(), temp.begin(), temp.end());
 	}
@@ -173,7 +111,7 @@ public:
 	{
 		std::deque<uint8_t> temp;
 		temp.resize(_len);
-		std::copy(_buf, _buf+_len, temp.end());
+		std::copy(_buf, _buf + _len, temp.end());
 
 		return std::search(deque_.begin(), deque_.end(), temp.begin(), temp.end());
 	}
@@ -196,12 +134,12 @@ public:
 	{
 		std::deque<uint8_t> temp;
 
-		for (auto it: _vector)
+		for (auto it : _vector)
 		{
 			uint8_t* add = (uint8_t*)(&it);
 
 			temp.resize(temp.size() + sizeof(T));
-			std::copy(add, add+sizeof(T), temp.end());
+			std::copy(add, add + sizeof(T), temp.end());
 		}
 
 		return std::search(deque_.begin(), deque_.end(), temp.begin(), temp.end());
@@ -273,7 +211,7 @@ public:
 	{
 		std::ios_base::fmtflags f{ _os.flags() };
 
-		for (auto i:_pipeline.deque_)
+		for (auto i : _pipeline.deque_)
 		{
 			_os << std::right << std::setw(2) << std::setfill('0') << std::hex << +(i) << ' ';
 		}
