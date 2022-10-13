@@ -7,8 +7,9 @@
 #include <condition_variable>
 #include <cstdarg>
 #include <functional>
+#include <iomanip>
 
-#include "STL.h"
+#include "Queue.h"
 
 using namespace std;
 
@@ -33,8 +34,7 @@ public:
 	{}
 
 	virtual ~LogData()
-	{
-	}
+	{}
 
 	virtual void Output() = 0;
 };
@@ -88,7 +88,7 @@ public:
 
 	LogManager& operator=(const LogManager&) = delete;
 	LogManager(const LogManager&) = delete;
-	//LogManager& operator=(LogManager const&) = delete;
+	LogManager& operator=(LogManager const&) = delete;
 	LogManager& operator=(LogManager&&) = delete;
 	
 
