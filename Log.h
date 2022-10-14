@@ -88,7 +88,7 @@ public:
 
 	LogManager& operator=(const LogManager&) = delete;
 	LogManager(const LogManager&) = delete;
-	LogManager& operator=(LogManager const&) = delete;
+	//LogManager& operator=(LogManager const&) = delete;
 	LogManager& operator=(LogManager&&) = delete;
 	
 
